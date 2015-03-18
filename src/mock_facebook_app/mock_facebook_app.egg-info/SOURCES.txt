@@ -1,0 +1,5 @@
+setup.py
+mock_facebook_app.egg-info/PKG-INFO
+mock_facebook_app.egg-info/SOURCES.txt
+mock_facebook_app.egg-info/dependency_links.txt
+mock_facebook_app.egg-info/top_level.txt

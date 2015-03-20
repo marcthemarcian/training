@@ -134,8 +134,9 @@ h1 a:link {
 }
 
 #signup-button {
-    margin-top: 20px;
-    margin-left: 50px;
+    float:right;
+    right: 30px;
+    top: 10px;
 }
 
 #greeting {
@@ -188,7 +189,7 @@ textarea[name="text"] {
     max-width: 600px;
     min-height: 50px;
     padding: 15px;
-    background: #6d84b4;
+    background: #BED3FF;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
@@ -202,7 +203,7 @@ textarea[name="text"] {
     position: absolute;
     border-style: solid;
     border-width: 10px 25px 10px 0;
-    border-color: transparent #6d84b4;
+    border-color: transparent #BED3FF;
     display: block;
     width: 0;
     z-index: 1;

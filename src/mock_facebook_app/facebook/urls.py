@@ -8,5 +8,6 @@ urlpatterns = patterns(
     url(r'^verifyLogin$', views.verifyLogin, name='verifyLogin'),
     url(r'^verifySignUp$', views.verifySignUp, name='verifySignUp'),
     url(r'^post_status$', views.post_status, name='post_status'),
-    url(r'^logout$', views.logoutUser, name='logout')
+    url(r'^logout$', views.logoutUser, name='logout'),
+    url(r'^(?P<slug>[\w@+._-]+)$', views.ProfileView.as_view(), name='profile')
 )

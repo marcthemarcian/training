@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views import generic
 from django.contrib.auth.models import User
@@ -51,6 +51,19 @@ class HomeView(generic.TemplateView):
         return context
 
 
+class ProfileView(generic.DetailView):
+    model = User
+    template_name = "facebook/profile.html"
+
+    def get_object(self, **kwargs):
+        return get_object_or_404(User, username=self.kwargs['slug'])
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileView, self).get_context_data(**kwargs)
+        context['userprofile'] = self.object
+        return context
+
+
 def verifyLogin(request):
 
     user = authenticate(
@@ -90,6 +103,5 @@ def post_status(request):
 
 
 def logoutUser(request):
-
     logout(request)
     return HttpResponseRedirect(reverse('facebook:index'))

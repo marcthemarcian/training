@@ -2,19 +2,24 @@
 {% load staticfiles %}
 
 {% block post %}
-Hi, {{ user.first_name }}!
 
 <form method="post" action="{% url 'facebook:post_status' %}">
     {% csrf_token %}
     {{ postform.text }}
     <button type="submit" class="uibutton confirm" id="post-button">Post</button>
 </form>
-<a href="{% url 'facebook:logout' %}" class="uibutton confirm" id="logout-button">Logout</a>
 {% endblock %}
 
 {% block feed %}
     {% for item in posts %}
-        {{ item.text }}
-        {{ item.user }}
+        <div id="stat-container">
+            <div class="picture">
+                <img src="{% static 'facebook/images/1-icon.png' %}"/>
+                {{ item.user }}
+            </div>
+            <div class="bubble">
+                {{ item.text|linebreaksbr }}
+            </div>
+        </div> 
     {% endfor %}
 {% endblock %}

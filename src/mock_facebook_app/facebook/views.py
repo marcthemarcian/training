@@ -42,7 +42,6 @@ class HomeView(generic.TemplateView):
     template_name = "facebook/home.html"
 
     def get_context_data(self, **kwargs):
-        print self.request, "hahaha"
         posts = Post.objects.order_by('datetime').reverse()
 
         context = {
@@ -53,10 +52,6 @@ class HomeView(generic.TemplateView):
 
 
 def verifyLogin(request):
-    if 'HTTP_REFERRER' in request:
-      print "blah"
-    else:
-      print "boo"
 
     user = authenticate(
         username=request.POST['username'],
@@ -70,6 +65,7 @@ def verifyLogin(request):
 
 
 def verifySignUp(request):
+
     user = User(
         username=request.POST['username'],
         first_name=request.POST['first_name'],
@@ -82,7 +78,7 @@ def verifySignUp(request):
 
 
 def post_status(request):
-    print request, "hihihi"
+
     if request.POST['text'] != "":
         p = Post(
             user=request.user,
@@ -94,6 +90,6 @@ def post_status(request):
 
 
 def logoutUser(request):
-    logout(request)
 
+    logout(request)
     return HttpResponseRedirect(reverse('facebook:index'))

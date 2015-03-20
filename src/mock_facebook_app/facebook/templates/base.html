@@ -6,10 +6,35 @@
         <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/fb-buttons.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/application.css' %}">
     </head>
-    <body> 
-        {% block post %}
-        {% endblock %}
-        {% block feed %}
-        {% endblock %}
+    <body>
+        <div id="header-container">
+            <div class="wrapper">
+                <div id="logo">
+                    <h1><a href="/facebook/">facebook</a></h1>
+                </div>
+                <div id="content-container">
+                    <div id="greeting">
+                        <span>Hi, {{ user.first_name }}!</span>
+                        <a href="{% url 'facebook:logout' %}" class="uibutton confirm" id="logout-button">Logout</a>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div id="body-container">
+            <div class="wrapper">
+                <div id="post-status-container">
+                    <div id="post-status">
+                        {% block post %}
+                        {% endblock %}
+                    </div>
+                </div>
+                <div id="posts-container">
+                    <div id="posts">
+                        {% block feed %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

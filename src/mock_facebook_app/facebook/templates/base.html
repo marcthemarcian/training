@@ -6,13 +6,10 @@
         <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/fb-buttons.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/application.css' %}">
     </head>
-    <body>
-        <div id="header-container">
-            <div id="logo">
-                <h1><a href="/facebook/">facebook</a></h1>
-            </div>
-            {% block content %}
-            {% endblock %}
-        </div>
+    <body> 
+        {% block post %}
+        {% endblock %}
+        {% block feed %}
+        {% endblock %}
     </body>
 </html>

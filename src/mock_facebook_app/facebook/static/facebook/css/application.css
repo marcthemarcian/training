@@ -1,5 +1,11 @@
+@font-face {
+    font-family: 'lucida-grande';
+    src: url(../fonts/lucida-grande.ttf);
+}
+
 body {
-    font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;
+    background: #edf0f5;
+    font-family: 'lucida-grande';
     font-size: 11px;
     text-align: left;
     direction: ltr;
@@ -18,11 +24,20 @@ body {
     border-bottom: 1px solid #133783;
     -webkit-box-shadow: 0 2px 2px -2px rgba(0, 0, 0, .52);
     min-width: 100%;
+    min-height: 84px;
+    max-height: 84px;
     position:absolute;
     left:0;
     top:0;
 }
 
+
+.wrapper {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+h1,
 h1 a,
 h1 a:visited,
 h1 a:hover,
@@ -31,5 +46,94 @@ h1 a:link {
     text-decoration: none;
     color: white;
     cursor: pointer;
-    font-size: 30px;
+    font-size: 40px;
+    font-weight: bolder;
+    margin: 0;
+}
+
+#logo {
+    display: inline-block;
+    vertical-align: baseline;
+    margin-top: 30px;
+    margin-left: 110px;
+    width: 200px;
+}
+
+#content-container {
+    display: inline-block;
+    vertical-align: baseline;
+    width: 300px;
+    position: relative;
+    left: 400px;
+}
+
+#login-form {
+    color: white;
+}
+
+#body-container {
+    background: #edf0f5;
+    min-width: 100%;
+    min-height: 613px;
+    position: absolute;
+    top: 85px;
+    left: 0px;
+    color: #333;
+}
+
+#introduction-container h2, 
+#intro-body {
+    font-size: 26px;
+    max-width: 409px;
+    position: relative;
+    left: 110px;
+    top: 45px;
+}
+
+#sign-up-container {
+    min-width: 409px;
+    min-height: 100px;
+    position: absolute;
+    right: 140px;
+    top: 25px;
+}
+
+#sign-up-container h2 {
+    font-size: 36px;
+    margin: 0;
+}
+
+#sign-up p{
+    font-size: 19px;
+    margin-top: 0px;
+    color: #333;
+}
+
+.entry {
+    min-width: 565px;
+    min-height: 53px;
+    padding: 13px;
+}
+
+.entry img {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.entry p {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 20px;
+    width: 450px;
+    font-size: 16px;
+}
+
+#signup-form tbody tr input {
+    margin: 10px auto;
+    width: 310px;
+}
+
+#signup-button {
+    margin-top: 20px;
+    margin-left: 50px;
 }

@@ -1,0 +1,51 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>  
+        <title>Facebook</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/fb-buttons.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/application.css' %}">
+    </head>
+    <body>
+            <div id="header-container">
+                <div class="wrapper">
+                    <div id="logo">
+                        <h1><a href="/facebook/">facebook</a></h1>
+                    </div>
+                    <div id="content-container">
+                        {% block login %}
+                        {% endblock %}
+                    </div> 
+                </div>
+            </div>
+            <div id="body-container">
+                <div class="wrapper">
+                    <div id="introduction-container">
+                        <h2>Connect with friends and the world around you on Facebook.</h2>
+                        <div id="intro-body">
+                            <div class="entry">
+                                <img src="{% static 'facebook/images/1-icon.png' %}"/>
+                                <p><strong>See photos and updates</strong> from friends in News Feed.</p>
+                            </div>
+                            <div class="entry">
+                                <img src="{% static 'facebook/images/2-icon.png' %}"/>
+                                <p><strong>Share what's new</strong> in your life on your Timeline.</p>
+                            </div>
+                            <div class="entry">
+                                <img src="{% static 'facebook/images/3-icon.png' %}"/>
+                                <p style="margin-left:10px"><strong>Find more</strong> of what you're looking for with Graph Search.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sign-up-container">
+                        <div id="sign-up"> 
+                            <h2>Sign Up</h2>
+                            <p>It's free and always will be.</p>
+                            {% block signup %}
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </body>
+</html>

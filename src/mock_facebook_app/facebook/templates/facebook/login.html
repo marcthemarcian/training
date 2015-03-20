@@ -1,5 +1,6 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "splash-screen.html" %}
+
+{% block login %}
 
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
@@ -7,18 +8,46 @@
 
 <form method="post" action="{% url 'facebook:verifyLogin' %}">
     {% csrf_token %}
-    <table>
+    <table id="login-form">
         <tr>
-            <td>{{ form.username.label_tag }}</td>
-            <td>{{ form.username }}</td>
+            <td>Username</td>
+            <td>Password</td>
         </tr>
         <tr>
-            <td>{{ form.password.label_tag }}</td>
-            <td>{{ form.password }}</td>
+            <td>{{ loginform.username }}</td>
+            <td>{{ loginform.password }}</td>
+            <td><input type="submit" id="login-button" class="uibutton confirm" value="Login" /></td>
         </tr>
     </table>
-
-    <input type="submit" class="uibutton confirm" value="Login" />
 </form>
 
+{% endblock %}
+
+{% block signup %}
+<form method="post" action="{% url 'facebook:verifySignUp' %}">
+    {% csrf_token %}
+    <table id="signup-form">
+        <tr>
+            <td><label>First Name</label></td>
+            <td>{{ signupform.first_name }}</td>
+        </tr>
+        <tr>
+            <td><label>Last Name</label></td>
+            <td>{{ signupform.last_name }}</td>
+        </tr>
+        <tr>
+            <td><label>Email</label></td>
+            <td>{{ signupform.email }}</td>
+        </tr>
+        <tr>
+            <td><label>Username</label></td>
+            <td>{{ signupform.username }}</td>
+        </tr>
+        <tr>
+            <td><label>Password</label></td>
+            <td>{{ signupform.password }}</td>
+        </tr>
+    </table>
+    <td><input type="submit" id="signup-button" class="uibutton special" value="Sign Up" /></td>
+</form>
 {% endblock %}

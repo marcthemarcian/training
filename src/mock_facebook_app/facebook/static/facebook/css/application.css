@@ -94,7 +94,7 @@ h1 a:link {
     min-width: 409px;
     min-height: 100px;
     position: absolute;
-    right: 140px;
+    right: 150px;
     top: 25px;
 }
 
@@ -130,13 +130,17 @@ h1 a:link {
 
 #signup-form tbody tr input {
     margin: 10px auto;
-    width: 310px;
+    width: 230px;
 }
 
 #signup-button {
-    float:right;
-    right: 30px;
+    float: right;
+    right: 40px;
     top: 10px;
+}
+
+.helptext {
+    display: none;
 }
 
 #greeting {

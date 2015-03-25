@@ -27,26 +27,7 @@
 <form method="post" action="{% url 'facebook:verifySignUp' %}">
     {% csrf_token %}
     <table id="signup-form">
-        <tr>
-            <td><label>First Name</label></td>
-            <td>{{ signupform.first_name }}</td>
-        </tr>
-        <tr>
-            <td><label>Last Name</label></td>
-            <td>{{ signupform.last_name }}</td>
-        </tr>
-        <tr>
-            <td><label>Email</label></td>
-            <td>{{ signupform.email }}</td>
-        </tr>
-        <tr>
-            <td><label>Username</label></td>
-            <td>{{ signupform.username }}</td>
-        </tr>
-        <tr>
-            <td><label>Password</label></td>
-            <td>{{ signupform.password }}</td>
-        </tr>
+        {{signupform}}
     </table>
     <td><input type="submit" id="signup-button" class="uibutton special" value="Sign Up" /></td>
 </form>

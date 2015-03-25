@@ -1,12 +1,13 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import get_object_or_404
 from django.views import generic
+from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.core.urlresolvers import reverse
+from django.utils import timezone
 from facebook.models import Post, Like, Comment
 from facebook.forms import LoginForm, SignUpForm, PostForm
-from django.utils import timezone
+from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseNotFound
 
 
 class IndexView(generic.View):
@@ -79,15 +80,18 @@ def verifyLogin(request):
 
 def verifySignUp(request):
 
-    user = User(
-        username=request.POST['username'],
-        first_name=request.POST['first_name'],
-        last_name=request.POST['last_name'],
-        email=request.POST['email'],
-    )
-    user.set_password(request.POST['password'])
-    user.save()
-    return HttpResponseRedirect(reverse('facebook:index'))
+    user_form = SignUpForm(request.POST)
+    if user_form.is_valid():
+        username = user_form.clean_username()
+        password = user_form.clean_password2()
+        user_form.save()
+        user = authenticate(username=username,
+                            password=password)
+        login(request, user)
+        return HttpResponseRedirect(reverse('facebook:index'))
+
+    print user_form.error_messages
+    return HttpResponse(user_form.error_messages['password_mismatch'])
 
 
 def post_status(request):

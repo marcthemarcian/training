@@ -1,0 +1,50 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Facebook</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/fb-buttons.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/application.css' %}">
+    </head>
+    <body>
+        <div id="header-container">
+            <div class="wrapper">
+                <div id="logo">
+                    <h1><a href="/facebook/">facebook</a></h1>
+                </div>
+            </div>
+        </div>
+        <div id="body-container">
+            <div class="wrapper">
+                <div id="global-container">
+                    <div id="login-attempt-container">
+                        <div id="login-attempt-header">
+                            <h2>Facebook login</h2>
+                        </div>
+                        <form id="login" method="POST">
+                            {% csrf_token %}
+                            <table id="login-form">
+                                <tr>
+                                    <td>Username</td>
+                                    <td>Password</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ loginform.username }}</td>
+                                    <td>{{ loginform.password }}</td>
+                                    <td><button type="submit" id="login-button" class="uibutton confirm" value="Login" />Login</td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="{% static 'facebook/js/jquery.js' %}"></script>
+        <script type="text/javascript">
+            var verifyLoginURL = '{% url "facebook:verifyLogin" %}';
+            var verifySignUpURL ='{% url "facebook:verifySignUp" %}';
+            var loginURL = '{% url "facebook:login" %}';
+        </script>
+        <script type="text/javascript" src="{% static 'facebook/js/application.js' %}"></script>
+    </body>
+</html>

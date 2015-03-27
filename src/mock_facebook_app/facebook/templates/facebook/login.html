@@ -6,7 +6,7 @@
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
 
-<form method="post" action="{% url 'facebook:verifyLogin' %}">
+<form id="login" method="POST">
     {% csrf_token %}
     <table id="login-form">
         <tr>
@@ -16,7 +16,7 @@
         <tr>
             <td>{{ loginform.username }}</td>
             <td>{{ loginform.password }}</td>
-            <td><input type="submit" id="login-button" class="uibutton confirm" value="Login" /></td>
+            <td><button type="submit" id="login-button" class="uibutton confirm" value="Login" />Login</td>
         </tr>
     </table>
 </form>
@@ -24,11 +24,15 @@
 {% endblock %}
 
 {% block signup %}
-<form method="post" action="{% url 'facebook:verifySignUp' %}">
-    {% csrf_token %}
-    <table id="signup-form">
-        {{signupform}}
-    </table>
-    <td><input type="submit" id="signup-button" class="uibutton special" value="Sign Up" /></td>
-</form>
+<div id="sign-up"> 
+    <h2>Sign Up</h2>
+    <p>It's free and always will be.</p>
+    <form id="signup" method="POST">
+        {% csrf_token %}
+        <table id="signup-form">
+            {{signupform}}
+        </table>
+        <td><button type="submit" id="signup-button" class="uibutton large special" value="Sign Up">Sign Up</button></td>
+    </form>
+</div>
 {% endblock %}

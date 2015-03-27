@@ -8,6 +8,7 @@ from facebook.models import Post, Like, Comment
 from facebook.forms import LoginForm, SignUpForm, PostForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.http import HttpResponseNotFound
+import json
 
 
 class IndexView(generic.View):
@@ -35,6 +36,16 @@ class LoginView(generic.TemplateView):
         context = {
             'loginform': LoginForm(),
             'signupform': SignUpForm()
+        }
+        return context
+
+
+class LoginUser(generic.TemplateView):
+    template_name = "facebook/login-attempt.html"
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'loginform': LoginForm(),
         }
         return context
 
@@ -74,12 +85,21 @@ def verifyLogin(request):
 
     if user is not None:
         login(request, user)
+        if request.is_ajax():
+            return HttpResponse('{"success": true}')
+    else:
+        if request.is_ajax():
+            return HttpResponse(
+                '{"success": false, "error": "Invalid username or password."}'
+            )
 
     return HttpResponseRedirect(reverse('facebook:index'))
 
 
-def verifySignUp(request):
 
+
+
+def verifySignUp(request):
     user_form = SignUpForm(request.POST)
     if user_form.is_valid():
         username = user_form.clean_username()
@@ -88,10 +108,20 @@ def verifySignUp(request):
         user = authenticate(username=username,
                             password=password)
         login(request, user)
-        return HttpResponseRedirect(reverse('facebook:index'))
+        if request.is_ajax():
+            return HttpResponse('{"success": true}')
+    else:
+        s = "Error:\n"
 
-    print user_form.error_messages
-    return HttpResponse(user_form.error_messages['password_mismatch'])
+        for keys in user_form.error_messages:
+            s += user_form.error_messages[keys] + "\n"
+
+        if request.is_ajax():
+            return HttpResponse(
+                json.dumps({"success": "false", "error": user_form.errors})
+            )
+
+    return HttpResponseRedirect(reverse('facebook:index'))
 
 
 def post_status(request):

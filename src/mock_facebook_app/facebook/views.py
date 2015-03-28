@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.views import generic
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -9,6 +10,7 @@ from facebook.forms import LoginForm, SignUpForm, PostForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.http import HttpResponseNotFound
 import json
+from django.core.serializers.json import DjangoJSONEncoder
 
 
 class IndexView(generic.View):
@@ -44,8 +46,13 @@ class LoginUser(generic.TemplateView):
     template_name = "facebook/login-attempt.html"
 
     def get_context_data(self, **kwargs):
+        error = ""
+        if self.request.GET.get('login_error'):
+            error = "Invalid username or password."
+
         context = {
             'loginform': LoginForm(),
+            'error': error
         }
         return context
 
@@ -76,6 +83,22 @@ class ProfileView(generic.DetailView):
         return context
 
 
+class RemovePost(generic.View):
+    def dispatch(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, pk=request.POST['post-id'])
+
+        if (post.user.id == request.user.id):
+            post.delete()
+            return HttpResponse(
+                json.dumps({
+                    "success": True, 
+                    "post-id": request.POST['post-id']
+                })
+            )
+        else:
+            return HttpResponse(json.dumps({"success": False}))
+
+
 def verifyLogin(request):
 
     user = authenticate(
@@ -85,18 +108,10 @@ def verifyLogin(request):
 
     if user is not None:
         login(request, user)
-        if request.is_ajax():
-            return HttpResponse('{"success": true}')
     else:
-        if request.is_ajax():
-            return HttpResponse(
-                '{"success": false, "error": "Invalid username or password."}'
-            )
+        return HttpResponseRedirect(reverse('facebook:login')+"?login_error=1")
 
     return HttpResponseRedirect(reverse('facebook:index'))
-
-
-
 
 
 def verifySignUp(request):
@@ -126,12 +141,16 @@ def verifySignUp(request):
 
 def post_status(request):
 
-    if request.POST['text'] != "":
-        p = Post(
-            user=request.user,
-            text=request.POST['text'],
-            datetime=timezone.now())
-        p.save()
+    p = Post(
+        user=request.user,
+        text=request.POST['text'],
+        datetime=timezone.now())
+    p.save()
+
+    if request.is_ajax():
+        d = p.datetime.strftime("%B") + p.datetime.strftime("%B")
+        html = render_to_string("facebook/post.html", {"post": p})
+        return HttpResponse(html)
 
     return HttpResponseRedirect(reverse('facebook:index'))
 

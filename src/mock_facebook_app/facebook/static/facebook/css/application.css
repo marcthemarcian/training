@@ -67,6 +67,15 @@ h1 a:link {
     left: 400px;
 }
 
+#login-container {
+    text-align: center;
+}
+
+#login-attempt {
+    text-align: left;
+    display: inline-block;
+}
+
 #login-form {
     color: white;
 }
@@ -193,7 +202,7 @@ h1 a:link {
     margin-left: 20px;
     margin-right: 20px;
     margin-top: 5px;
-    padding-bottom: 5.5px;
+    padding-bottom: 15.5px;
     padding-left: 0px;
     padding-right: 0px;
     padding-top: 6px;

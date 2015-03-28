@@ -6,7 +6,7 @@
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
 
-<form id="login" method="POST">
+<form id="login" method="POST" action="{% url 'facebook:verifyLogin' %}">
     {% csrf_token %}
     <table id="login-form">
         <tr>

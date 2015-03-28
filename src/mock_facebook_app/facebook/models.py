@@ -15,5 +15,6 @@ class Like(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(User)
-    post = models.ForeignKey(Post)
+    post = models.ForeignKey(Post, related_name="comment")
     text = models.TextField()
+    datetime = models.DateTimeField('date posted')

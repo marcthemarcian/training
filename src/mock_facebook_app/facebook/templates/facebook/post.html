@@ -1,0 +1,19 @@
+{% load staticfiles %}
+
+<div id="container_{{ post.id }}" class="stat-container">
+    <div class="picture">
+        <img src="{% static 'facebook/images/1-icon.png' %}"/>
+        {{ post.user }}
+    </div>
+    <div class="bubble">
+        {{ post.text|linebreaksbr }}
+        <div class="datetime">
+            {{ post.datetime}}
+        </div>
+        {% if item.user.id == user.id %}
+        <div class="removePostContainer">
+            <a href="" id="{{ post.id }}" class="removePost">x</a>
+        </div>
+        {% endif %}
+    </div>
+</div> 

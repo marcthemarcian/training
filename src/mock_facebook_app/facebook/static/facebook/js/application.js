@@ -11,9 +11,8 @@ $(document).ready(function(){
         }
     }
 
-    $('#login').on('submit', function(e){
+    $('#login-sattempt').on('submit', function(e){
         e.preventDefault();
-        
         $.ajax({
             type: 'POST',
             url:  verifyLoginURL,
@@ -24,11 +23,11 @@ $(document).ready(function(){
             beforeSend: setCSRFToken,
             success: function(response) {
                 var data = JSON.parse(response);
-
+                console.log(data);
                 if (data['success'] == true) {
                     window.location.reload();
                 } else {
-                    window.location = loginURL;
+                    alert("Nope.");
                 }
             },
             error: function(response, e) {
@@ -71,5 +70,59 @@ $(document).ready(function(){
                 alert(response.responseText)
             }
         });
+    });
+
+    $('#post-form').on('submit', function(e){
+        e.preventDefault();
+
+        if ($('#id_text').val().trim() == "") {
+            alert("Please write something.");
+            $('#id_text').val("");
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url:  postStatusURL,
+            data: {
+                'text': $('#id_text').val()
+            },
+            beforeSend: setCSRFToken,
+            success: function(response) {
+                $('#posts').prepend(response);
+                $('#posts > div:nth-child(1)').hide().fadeIn();
+                $('#id_text').val("");
+            },
+            error: function(response, e) {
+                alert(response.responseText)
+            }
+        });
+    });
+
+    $('#posts').on('click', '.removePost', function(e){
+
+        e.preventDefault();
+
+        choice = prompt("Are you sure you want to delete this post? (y/n)");
+        
+        if (choice.toLowerCase() == "yes" || choice.toLowerCase() == "y") {
+            $.ajax({
+                type: 'POST',
+                url:  removePostURL,
+                data: {
+                    'post-id': $(this).attr('id')
+                },
+                beforeSend: setCSRFToken,
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    if (data['success'] == true) {
+                        $("#container_"+data['post-id']).fadeOut();
+                    }
+                },
+                error: function(response, e) {
+                    alert(response.responseText)
+                }
+            });
+            }
     });
 });

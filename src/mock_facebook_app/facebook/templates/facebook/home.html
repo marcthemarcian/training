@@ -3,7 +3,7 @@
 
 {% block post %}
 
-<form method="post" action="{% url 'facebook:post_status' %}">
+<form id="post-form" method="POST">
     {% csrf_token %}
     {{ postform.text }}
     <button type="submit" class="uibutton confirm" id="post-button">Post</button>
@@ -12,13 +12,21 @@
 
 {% block feed %}
     {% for item in posts %}
-        <div id="stat-container">
+        <div id="container_{{ item.id }}" class="stat-container">
             <div class="picture">
                 <img src="{% static 'facebook/images/1-icon.png' %}"/>
                 {{ item.user }}
             </div>
             <div class="bubble">
                 {{ item.text|linebreaksbr }}
+                <div class="datetime">
+                    {{item.datetime}}
+                </div>
+                {% if item.user.id == user.id %}
+                <div class="removePostContainer">
+                    <a href="" id="{{ item.id }}" class="removePost">x</a>
+                </div>
+                {% endif %}
             </div>
         </div> 
     {% endfor %}

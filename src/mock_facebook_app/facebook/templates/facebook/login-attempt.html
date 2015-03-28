@@ -20,21 +20,28 @@
                     <div id="login-attempt-container">
                         <div id="login-attempt-header">
                             <h2>Facebook login</h2>
+                            <br>
                         </div>
-                        <form id="login" method="POST">
-                            {% csrf_token %}
-                            <table id="login-form">
-                                <tr>
-                                    <td>Username</td>
-                                    <td>Password</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ loginform.username }}</td>
-                                    <td>{{ loginform.password }}</td>
-                                    <td><button type="submit" id="login-button" class="uibutton confirm" value="Login" />Login</td>
-                                </tr>
-                            </table>
-                        </form>
+                        <div id="login-container">
+                            <form id="login-attempt" action="{% url 'facebook:verifyLogin' %}" method="POST" style="margin-top: 50px;">
+                                {% csrf_token %}
+                                {% if error != "" %}
+                                    <div class="error-message" style="margin-bottom:30px">{{ error }}</div>
+                                {% endif %}
+
+                                <table id="login-form">
+                                    <tr>
+                                        <td style="color:black">Username</td>
+                                        <td style="color:black">Password</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ loginform.username }}</td>
+                                        <td>{{ loginform.password }}</td>
+                                        <td><button type="submit" id="login-button" class="uibutton confirm" value="Login" />Login</td>
+                                    </tr>
+                                </table>
+                            </form>
+                        <div>
                     </div>
                 </div>
             </div>

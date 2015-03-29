@@ -10,7 +10,7 @@ class Post(models.Model):
 
 class Like(models.Model):
     user = models.ForeignKey(User)
-    post = models.ForeignKey(Post)
+    post = models.ForeignKey(Post, related_name="like")
 
 
 class Comment(models.Model):

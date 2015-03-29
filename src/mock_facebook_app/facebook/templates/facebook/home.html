@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load facebook_tags %}
 
 {% block post %}
 
@@ -27,7 +28,15 @@
                     <a href="" id="{{ item.id }}" class="removePost">x</a>
                 </div>
                 {% endif %}
+                <div class="toggleLikeContainer">
+                    {% hasLiked user item %}
+                </div>
+                <div class="likeCounterContainer">
+                    {% countLikes user item %}
+                </div>
             </div>
         </div> 
     {% endfor %}
 {% endblock %}
+
+

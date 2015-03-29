@@ -13,8 +13,8 @@ class LikeAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    fields = ['user', 'post', 'text']
-    list_display = ('user', 'post', 'text')
+    fields = ['user', 'post', 'text', 'datetime']
+    list_display = ('user', 'post', 'text', 'datetime')
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(Like, LikeAdmin)

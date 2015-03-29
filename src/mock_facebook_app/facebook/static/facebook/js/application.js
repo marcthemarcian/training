@@ -103,20 +103,22 @@ $(document).ready(function(){
 
         e.preventDefault();
 
-        choice = prompt("Are you sure you want to delete this post? (y/n)");
+        choice = confirm("Are you sure you want to delete this post? (y/n)");
         
-        if (choice.toLowerCase() == "yes" || choice.toLowerCase() == "y") {
+        if (choice) {
+            var post_id = $(this).attr('id');
+
             $.ajax({
                 type: 'POST',
                 url:  removePostURL,
                 data: {
-                    'post-id': $(this).attr('id')
+                    'post-id': post_id
                 },
                 beforeSend: setCSRFToken,
                 success: function(response) {
                     var data = JSON.parse(response);
                     if (data['success'] == true) {
-                        $("#container_"+data['post-id']).fadeOut();
+                        $("#container_"+post_id).fadeOut();
                     }
                 },
                 error: function(response, e) {
@@ -124,5 +126,28 @@ $(document).ready(function(){
                 }
             });
             }
+    });
+
+    $('#posts').on('click', '.toggleLike', function(e){
+        e.preventDefault();
+        var temp = $(this);
+
+        $.ajax({
+            type: 'POST',
+            url:  toggleLikeURL,
+            data: {
+                'post-id': $(this).attr('name'),
+                'liked': $(this).text() == "Like" ? false : true
+            },
+            beforeSend: setCSRFToken,
+            success: function(response) {
+                var data = JSON.parse(response);
+                temp.text(data['innerHTML']);
+                temp.parent().next().text(data['newCount']);
+            },
+            error: function(response, e) {
+                alert(response.responseText)
+            }
+        });
     });
 });

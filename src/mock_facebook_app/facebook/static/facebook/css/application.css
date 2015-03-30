@@ -328,3 +328,40 @@ textarea[name="text"] {
     left: -25px;
     top: 12px;
 }
+
+.removePostContainer {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
+a,
+a:visited,
+a:link,
+a:hover,
+a:active {
+    color: #133783;
+    text-decoration: none;
+}
+
+.removePost {
+    color: #133783;
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+.editPost {
+    font-weight: bolder;
+}
+
+.likeCount {
+    padding-left: 1em
+}
+
+.toggleLikeContainer {
+    padding-top: 2em;
+}
+
+#update-post-form {
+    padding-left: 45px;
+}

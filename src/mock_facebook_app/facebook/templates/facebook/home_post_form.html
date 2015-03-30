@@ -1,0 +1,6 @@
+<form id="update-post-form" method="post">
+    {% csrf_token %}
+    {{ form.text }}
+    <br>
+    <button type="submit" class="uibutton confirm" id="update-button" value="{{post.id}}">Edit</button>
+</form>

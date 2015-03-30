@@ -118,7 +118,7 @@ $(document).ready(function(){
                 success: function(response) {
                     var data = JSON.parse(response);
                     if (data['success'] == true) {
-                        $("#container_"+post_id).fadeOut();
+                        $("#container_"+post_id).fadeOut(function() {$("#container_"+post_id).remove()});
                     }
                 },
                 error: function(response, e) {
@@ -143,10 +143,53 @@ $(document).ready(function(){
             success: function(response) {
                 var data = JSON.parse(response);
                 temp.text(data['innerHTML']);
-                temp.parent().next().text(data['newCount']);
+                temp.next().text(data['newCount']);
             },
             error: function(response, e) {
                 alert(response.responseText)
+            }
+        });
+    });
+
+    $('#posts').on('click', '.editPost', function(e){
+        e.preventDefault();
+        var temp = $(this);
+
+        $.ajax({
+            type: 'POST',
+            url:  updatePostURL,
+            data: {
+                'post-id': $(this).attr('name'),
+            },
+            beforeSend: setCSRFToken,
+            success: function(response) {
+                container = temp.parent().parent();
+                container.html(response);
+            },
+            error: function(response, e) {
+                alert(response.responseText)
+            }
+        });
+    });
+
+    $('#posts').on('click', "#update-button", function(e){
+        e.preventDefault();
+        var temp = $(this);
+
+        $.ajax({
+            type: 'POST',
+            url:  submitEditFormURL,
+            data: {
+                'post-id': $(this).attr('value'),
+                'text': $(this).prev().prev().val()
+            },
+            beforeSend: setCSRFToken,
+            success: function(response) {
+                temp.closest('.stat-container').html($(response).html())
+                console.log(temp.closest('.stat-container'));
+            },
+            error: function(response, e) {
+                alert(response.responseText);
             }
         });
     });

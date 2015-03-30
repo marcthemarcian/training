@@ -84,7 +84,7 @@ class ProfileView(generic.DetailView):
 
 
 class RemovePost(generic.View):
-    def dispatch(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         post = get_object_or_404(Post, pk=request.POST['post-id'])
 
         if (post.user.id == request.user.id):
@@ -97,19 +97,79 @@ class RemovePost(generic.View):
 
 
 class ToggleLike(generic.View):
-    def dispatch(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         post = get_object_or_404(Post, pk=request.POST['post-id'])
         like = Like.objects.filter(user=request.user, post=post)
 
         if like:
             post.like.filter(user=request.user).delete()
-            s = countLikes(request.user, post)
-            return HttpResponse(json.dumps({"innerHTML": "Like", "newCount": s}))
+            s = self.countLikes(request.user, post)
+            return HttpResponse(
+                json.dumps({"innerHTML": "Like", "newCount": s})
+            )
         else:
             like = Like(user=request.user, post=post)
             like.save()
-            s = countLikes(request.user, post)
-            return HttpResponse(json.dumps({"innerHTML": "Unlike", "newCount": s}))
+            s = self.countLikes(request.user, post)
+            return HttpResponse(
+                json.dumps({"innerHTML": "Unlike", "newCount": s})
+            )
+
+    def countLikes(self, user, post):
+        likes = Like.objects.filter(post=post)
+        n = len(likes)
+        s = ""
+
+        if n == 0:
+            s = 'Be the first one to like this post.'
+        elif n == 1:
+            if likes.last().user == user:
+                s = "You like this."
+            else:
+                s = likes.last().user.first_name + " likes this."
+        else:
+            if likes.filter(user=user):
+                name = "You"
+            else:
+                name = likes.last().user.first_name
+
+            s = name + " and " + str(n - 1) + " other(s) like this."
+
+        return s
+
+
+class PostUpdate(generic.View):
+    def post(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, pk=request.POST['post-id'])
+
+        if post:
+            data = {'text': post.text}
+            html = render_to_string(
+                "facebook/home_post_form.html",
+                {"form": PostForm(initial=data),
+                 "user": request.user,
+                 "post": post}
+            )
+
+            return HttpResponse(html)
+        else:
+            return HttpResponse(json.dumps({"success": False}))
+
+
+class EditPost(generic.View):
+    def post(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, pk=request.POST['post-id'])
+
+        if post:
+            post.text = request.POST['text']
+            post.save()
+            html = render_to_string(
+                "facebook/post.html", {"post": post, "user": request.user}
+            )
+
+            return HttpResponse(html)
+        else:
+            return HttpResponse(json.dumps({"success": False}))
 
 
 def verifyLogin(request):
@@ -161,8 +221,9 @@ def post_status(request):
     p.save()
 
     if request.is_ajax():
-        d = p.datetime.strftime("%B") + p.datetime.strftime("%B")
-        html = render_to_string("facebook/post.html", {"post": p, "user": request.user})
+        html = render_to_string(
+            "facebook/post.html", {"post": p, "user": request.user}
+        )
         return HttpResponse(html)
 
     return HttpResponseRedirect(reverse('facebook:index'))
@@ -171,19 +232,3 @@ def post_status(request):
 def logoutUser(request):
     logout(request)
     return HttpResponseRedirect(reverse('facebook:index'))
-
-
-def countLikes(user, post):
-    likes = Like.objects.filter(post=post)
-    n = len(likes)
-    s = ""
-
-    if n == 0:
-        s = 'Be the first one to like this post.'
-    elif n == 1:
-        s = "You like this." if likes.last().user == user else likes.last().user.first_name + " likes this."
-    else:
-        name = "You" if likes.filter(user=user) else likes.last().user.first_name
-        s = name + " and " + str(n - 1) + " other(s) like this."
-
-    return s

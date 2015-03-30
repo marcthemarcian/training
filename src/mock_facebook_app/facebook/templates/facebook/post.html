@@ -1,6 +1,7 @@
 {% load staticfiles %}
 {% load facebook_tags %}
 
+
 <div id="container_{{ post.id }}" class="stat-container">
     <div class="picture">
         <img src="{% static 'facebook/images/1-icon.png' %}"/>
@@ -8,20 +9,20 @@
     </div>
     <div class="bubble">
         {{ post.text|linebreaksbr }}
-        <div class="datetime">
-            {{ post.datetime}}
-        </div>
-        {% if post.user == user %}
-        <div class="removePostContainer">
-            <a href="" id="{{ post.id }}" class="removePost">x</a>
-        </div>
-        {% endif %}
         <div class="toggleLikeContainer">
             {% hasLiked user post %}
+            <span class="likeCount"> {% countLikes user post %} </span>
         </div>
-        <div class="likeCounterContainer">
-            {% countLikes user post %}
+        <div class="datetimeContainer">
+            {{ post.datetime | time:"g:i A -" | lower }}
+            {{ post.datetime | date:"M d, Y"}}
         </div>
+        {% if post.user.id == user.id %}
+        <div class="removePostContainer">
+            <a href="" class="editPost" name="{{ post.id }}">Edit</a>
+            |
+            <a href="#" id="{{ post.id }}" class="removePost">x</a>
+        </div>
+        {% endif %}
     </div>
 </div> 
-

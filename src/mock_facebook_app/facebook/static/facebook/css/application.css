@@ -365,3 +365,8 @@ a:active {
 #update-post-form {
     padding-left: 45px;
 }
+
+#profpic {
+    height: 55px;
+    width: 55px;
+}

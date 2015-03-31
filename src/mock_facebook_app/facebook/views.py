@@ -177,63 +177,71 @@ class EditPost(generic.View):
             return HttpResponse(json.dumps({"success": False}))
 
 
-def verifyLogin(request):
+class PostStatus(generic.View):
 
-    user = authenticate(
-        username=request.POST['username'],
-        password=request.POST['password']
-    )
-
-    if user is not None:
-        login(request, user)
-    else:
-        return HttpResponseRedirect(reverse('facebook:login')+"?login_error=1")
-
-    return HttpResponseRedirect(reverse('facebook:index'))
-
-
-def verifySignUp(request):
-    user_form = SignUpForm(request.POST)
-    if user_form.is_valid():
-        username = user_form.clean_username()
-        password = user_form.clean_password2()
-        user_form.save()
-        user = authenticate(username=username,
-                            password=password)
-        login(request, user)
-        if request.is_ajax():
-            return HttpResponse('{"success": true}')
-    else:
-        s = "Error:\n"
-
-        for keys in user_form.error_messages:
-            s += user_form.error_messages[keys] + "\n"
+    def post(self, request, *args, **kwargs):
+        p = Post(
+            user=request.user,
+            text=request.POST['text'],
+            datetime=timezone.now())
+        p.save()
 
         if request.is_ajax():
-            return HttpResponse(
-                json.dumps({"success": "false", "error": user_form.errors})
+            html = render_to_string(
+                "facebook/post.html", {"post": p, "user": request.user}
+            )
+            return HttpResponse(html)
+
+        return HttpResponseRedirect(reverse('facebook:index'))
+
+
+class VerifyLogin(generic.View):
+
+    def post(self, request, *args, **kwargs):
+        user = authenticate(
+            username=request.POST['username'],
+            password=request.POST['password']
+        )
+
+        if user:
+            login(request, user)
+        else:
+            return HttpResponseRedirect(
+                reverse('facebook:login')+"?login_error=1"
             )
 
-    return HttpResponseRedirect(reverse('facebook:index'))
+        return HttpResponseRedirect(reverse('facebook:index'))
 
 
-def post_status(request):
+class VerifySignUp(generic.View):
 
-    p = Post(
-        user=request.user,
-        text=request.POST['text'],
-        datetime=timezone.now())
-    p.save()
+    def post(self, request, *args, **kwargs):
+        user_form = SignUpForm(request.POST)
+        if user_form.is_valid():
+            username = user_form.clean_username()
+            password = user_form.clean_password2()
+            user_form.save()
+            user = authenticate(username=username,
+                                password=password)
+            login(request, user)
+            if request.is_ajax():
+                return HttpResponse('{"success": true}')
+        else:
+            s = "Error:\n"
 
-    if request.is_ajax():
-        html = render_to_string(
-            "facebook/post.html", {"post": p, "user": request.user}
-        )
-        return HttpResponse(html)
+            for keys in user_form.error_messages:
+                s += user_form.error_messages[keys] + "\n"
 
-    return HttpResponseRedirect(reverse('facebook:index'))
+            if request.is_ajax():
+                return HttpResponse(
+                    json.dumps({"success": "false", "error": user_form.errors})
+                )
+
+        return HttpResponseRedirect(reverse('facebook:index'))
 
 
-def logoutUser(request):
-    logout(request)
-    return HttpResponseRedirect(reverse('facebook:index'))
+class LogoutUser(generic.View):
+
+    def dispatch(self, request, *args, **kwargs):
+        logout(request)
+        return HttpResponseRedirect(reverse('facebook:index'))

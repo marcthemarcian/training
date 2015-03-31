@@ -20,8 +20,8 @@
             <div class="bubble">
                 {{ item.text|linebreaksbr }}
                 <div class="toggleLikeContainer">
-                    {% hasLiked user item %}
-                    <span class="likeCount"> {% countLikes user item %} </span>
+                    {% has_liked user item %}
+                    <span class="likeCount"> {% count_likes user item %} </span>
                 </div>
                 <div class="datetimeContainer">
                     {{ item.datetime | time:"g:i A -" | lower }}

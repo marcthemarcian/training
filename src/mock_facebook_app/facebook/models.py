@@ -10,11 +10,11 @@ class Post(models.Model):
 
 class Like(models.Model):
     user = models.ForeignKey(User)
-    post = models.ForeignKey(Post, related_name="like")
+    post = models.ForeignKey(Post, related_name="likes")
 
 
 class Comment(models.Model):
     user = models.ForeignKey(User)
-    post = models.ForeignKey(Post, related_name="comment")
+    post = models.ForeignKey(Post, related_name="comments")
     text = models.TextField()
     datetime = models.DateTimeField('date posted')

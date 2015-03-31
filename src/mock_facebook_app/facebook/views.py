@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.views import generic
@@ -5,12 +6,12 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
-from facebook.models import Post, Like, Comment
-from facebook.forms import LoginForm, SignUpForm, PostForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.http import HttpResponseNotFound
-import json
 from django.core.serializers.json import DjangoJSONEncoder
+
+from facebook.models import Post, Like, Comment
+from facebook.forms import LoginForm, SignUpForm, PostForm
 
 
 class IndexView(generic.View):
@@ -84,6 +85,7 @@ class ProfileView(generic.DetailView):
 
 
 class RemovePost(generic.View):
+
     def post(self, request, *args, **kwargs):
         post = get_object_or_404(Post, pk=request.POST['post-id'])
 
@@ -97,12 +99,13 @@ class RemovePost(generic.View):
 
 
 class ToggleLike(generic.View):
+
     def post(self, request, *args, **kwargs):
         post = get_object_or_404(Post, pk=request.POST['post-id'])
         like = Like.objects.filter(user=request.user, post=post)
 
         if like:
-            post.like.filter(user=request.user).delete()
+            post.likes.filter(user=request.user).delete()
             s = self.countLikes(request.user, post)
             return HttpResponse(
                 json.dumps({"innerHTML": "Like", "newCount": s})
@@ -139,6 +142,7 @@ class ToggleLike(generic.View):
 
 
 class PostUpdate(generic.View):
+
     def post(self, request, *args, **kwargs):
         post = get_object_or_404(Post, pk=request.POST['post-id'])
 
@@ -157,6 +161,7 @@ class PostUpdate(generic.View):
 
 
 class EditPost(generic.View):
+
     def post(self, request, *args, **kwargs):
         post = get_object_or_404(Post, pk=request.POST['post-id'])
 

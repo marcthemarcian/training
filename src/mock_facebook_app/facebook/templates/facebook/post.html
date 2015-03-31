@@ -10,8 +10,8 @@
     <div class="bubble">
         {{ post.text|linebreaksbr }}
         <div class="toggleLikeContainer">
-            {% hasLiked user post %}
-            <span class="likeCount"> {% countLikes user post %} </span>
+            {% has_liked user post %}
+            <span class="likeCount"> {% count_likes user post %} </span>
         </div>
         <div class="datetimeContainer">
             {{ post.datetime | time:"g:i A -" | lower }}

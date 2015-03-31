@@ -1,13 +1,16 @@
 from django import template
+
 from facebook.models import Like
 
 register = template.Library()
 
 
 @register.simple_tag
-def hasLiked(user, item):
-    if item.like.filter(user=user):
-        return '<a href="" class="toggleLike" name="%i">Unlike</a>' % item.id
+def has_liked(user, item):
+    if item.likes.filter(user=user):
+        return '<a href="" class="toggleLike" name="{0}">Unlike</a>'.format(
+            item.id
+        )
     else:
         return '<a href="" class="toggleLike" name="{0}">Like</a>'.format(
             item.id
@@ -15,8 +18,8 @@ def hasLiked(user, item):
 
 
 @register.simple_tag
-def countLikes(user, post):
-    likes = Like.objects.filter(post=post)
+def count_likes(user, post):
+    likes = post.likes.all()
     n = len(likes)
     s = ""
 
@@ -26,13 +29,13 @@ def countLikes(user, post):
         if likes.last().user == user:
             s = "You like this."
         else:
-            s = likes.last().user.first_name + " likes this."
+            s = "{0} likes this.".format(likes.last().user.first_name)
     else:
         if likes.filter(user=user):
             name = "You"
         else:
             name = likes.last().user.first_name
 
-        s = name + " and " + str(n - 1) + " other(s) like this."
+        s = "{0} and {1} other(s) like this.".format(name, n - 1)
 
     return s

@@ -1,30 +1,83 @@
 {% load staticfiles %}
-<!DOCTYPE html>
-<html>
-    <head>  
-        <title>Facebook</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/fb-buttons.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/application.css' %}">
-    </head>
-    <body>
-        <div id="header-container">
-            <div class="wrapper">
-                <div id="logo">
-                    <h1><a href="/facebook/">facebook</a></h1>
-                </div>
-                <div id="content-container">
-                    <div id="greeting">
-                        <span>Hi, {{ user.first_name }}!</span>
-                        <a href="{% url 'facebook:logout' %}" class="uibutton confirm" id="logout-button">Logout</a>
+{% load facebook_tags %}
+
+
+{% if user.is_authenticated%}
+    <!DOCTYPE html>
+    <html>
+        <head>  
+            <title>Facebook</title>
+            <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/fb-buttons.css' %}">
+            <link rel="stylesheet" type="text/css" href="{% static 'facebook/css/application.css' %}">
+        </head>
+        <body>
+            <div id="header-container">
+                <div class="wrapper">
+                    <div id="logo">
+                        <h1><a href="/facebook/">facebook</a></h1>
                     </div>
-                </div> 
+                    <div id="content-container">
+                        <div id="greeting">
+                            <span>Hi, {{ user.first_name }}!</span>
+                            <a href="{% url 'facebook:logout' %}" class="uibutton confirm" id="logout-button">Logout</a>
+                        </div>
+                    </div> 
+                </div>
             </div>
-        </div>
-        <div id="body-container">
-            <div class="wrapper">
-                <br> Name: {{ userprofile.first_name }} {{ userprofile.last_name }}
-                <br> Email: {{ userprofile.email }}
+            <div id="body-container">
+                <div class="wrapper">
+                    <div id="post-status-container">
+                        <div id="post-status" style="text-align: center">
+                            <img id="profpic" src="{% static 'facebook/images/prof-pic.png' %}" style="height:100px;width:100px"/>
+                            <h3>{{ userprofile.first_name }} {{ userprofile.last_name }}</h3>   
+                        </div>
+                    </div>
+                    <div id="posts-container">
+                        <div id="posts">
+                            {% if not posts %}
+                                <div style="text-align: center"><h3>No posts to show.</h3></div>
+                            {% endif %}
+                            {% for item in posts %}
+                                <div id="container_{{ item.id }}" class="stat-container">
+                                    <div class="picture">
+                                        <img id="profpic" src="{% static 'facebook/images/prof-pic.png' %}"/>
+                                        {{ item.user.first_name }}
+                                    </div>
+                                    <div class="bubble">
+                                        {{ item.text|linebreaksbr }}
+                                        <div class="toggleLikeContainer">
+                                            {% has_liked user item %}
+                                            <span class="likeCount"> {% count_likes user item %} </span>
+                                        </div>
+                                        <div class="datetimeContainer">
+                                            {{ item.datetime | time:"g:i A -" | lower }}
+                                            {{ item.datetime | date:"M d, Y"}}
+                                        </div>
+                                        {% if item.user.id == user.id %}
+                                        <div class="removePostContainer">
+                                            <a href="" class="editPost" name="{{ item.id }}">Edit</a>
+                                            |
+                                            <a href="#" id="{{ item.id }}" class="removePost">x</a>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div> 
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </body>
-</html>
+            <script type="text/javascript" src="{% static 'facebook/js/jquery.js' %}"></script>
+            <script type="text/javascript">
+                var postStatusURL = "{% url 'facebook:post_status' %}";
+                var removePostURL = "{% url 'facebook:remove_post' %}";
+                var toggleLikeURL = "{% url 'facebook:toggle_like' %}";
+                var updatePostURL = "{% url 'facebook:update_post' %}";
+                var submitEditFormURL = "{% url 'facebook:submit_editForm' %}"
+            </script>
+            <script type="text/javascript" src="{% static 'facebook/js/application.js' %}"></script>
+        </body>
+    </html>
+{% else %}
+    <h3>You need to login to see {{ userprofile.first_name }}'s profile.</h3>
+{% endif %} 

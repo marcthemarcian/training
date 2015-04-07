@@ -71,19 +71,6 @@ class HomeView(generic.TemplateView):
         return context
 
 
-class ProfileView(generic.DetailView):
-    model = User
-    template_name = "facebook/profile.html"
-
-    def get_object(self, **kwargs):
-        return get_object_or_404(User, username=self.kwargs['slug'])
-
-    def get_context_data(self, **kwargs):
-        context = super(ProfileView, self).get_context_data(**kwargs)
-        context['userprofile'] = self.object
-        return context
-
-
 class RemovePost(generic.View):
 
     def post(self, request, *args, **kwargs):
@@ -245,3 +232,18 @@ class LogoutUser(generic.View):
     def dispatch(self, request, *args, **kwargs):
         logout(request)
         return HttpResponseRedirect(reverse('facebook:index'))
+
+
+class ProfileView(generic.DetailView):
+    model = User
+    template_name = "facebook/profile.html"
+
+    def get_object(self, **kwargs):
+        return get_object_or_404(User, username=self.kwargs['slug'])
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'userprofile': self.object,
+            'posts': Post.objects.filter(user=self.object)
+        }
+        return context
